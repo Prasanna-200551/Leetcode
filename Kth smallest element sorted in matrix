@@ -1,0 +1,37 @@
+import java.util.PriorityQueue;
+
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        // Min-heap to store elements in the form: [value, row, column]
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+
+        // Initialize the heap with the first element of each row
+        for (int i = 0; i < Math.min(n, k); i++) {
+            minHeap.offer(new int[]{matrix[i][0], i, 0});
+        }
+
+        int count = 0;
+        int result = 0;
+
+        // Extract the smallest elements from the heap up to k times
+        while (!minHeap.isEmpty()) {
+            int[] current = minHeap.poll();
+            result = current[0];
+            int row = current[1];
+            int col = current[2];
+
+            count++;
+            if (count == k) {
+                break;
+            }
+
+            // If there is a next element in the same row, add it to the heap
+            if (col + 1 < n) {
+                minHeap.offer(new int[]{matrix[row][col + 1], row, col + 1});
+            }
+        }
+
+        return result;
+    }
+}
