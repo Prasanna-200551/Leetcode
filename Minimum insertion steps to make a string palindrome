@@ -1,0 +1,33 @@
+class Solution {
+    public int minInsertions(String s) {
+        int n = s.length();
+        // dp[i][j] will hold the length of the longest palindromic subsequence
+        // in s[i..j]
+        int[][] dp = new int[n][n];
+
+        // Base case: single characters are palindromes of length 1
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = 1;
+        }
+
+        // Build the dp table in a bottom-up manner
+        for (int len = 2; len <= n; len++) {
+            for (int i = 0; i <= n - len; i++) {
+                int j = i + len - 1;
+                if (s.charAt(i) == s.charAt(j)) {
+                    if (len == 2) {
+                        dp[i][j] = 2;
+                    } else {
+                        dp[i][j] = 2 + dp[i + 1][j - 1];
+                    }
+                } else {
+                    dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        // The minimum insertions needed is the difference between the
+        // string length and the length of the longest palindromic subsequence
+        return n - dp[0][n - 1];
+    }
+}
